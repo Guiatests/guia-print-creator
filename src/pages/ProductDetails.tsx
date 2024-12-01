@@ -3,12 +3,12 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ShoppingCart } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
+import ProductDesignEditor from "@/components/ProductDesignEditor";
 
 const ProductDetails = () => {
   const { id } = useParams();
   const { toast } = useToast();
 
-  // Mock product data (in a real app, this would come from an API)
   const product = {
     id: parseInt(id || "1"),
     name: "Custom T-Shirt",
@@ -30,13 +30,9 @@ const ProductDetails = () => {
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="container mx-auto px-4">
         <Card className="p-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div>
-              <img
-                src={product.image}
-                alt={product.name}
-                className="w-full rounded-lg"
-              />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="space-y-6">
+              <ProductDesignEditor productImage={product.image} />
             </div>
             <div>
               <h1 className="text-3xl font-bold text-gray-900 mb-4">{product.name}</h1>
