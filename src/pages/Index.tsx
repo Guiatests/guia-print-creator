@@ -29,7 +29,7 @@ const Index = () => {
         navigate("/quiz");
       } else if (_event === 'SIGNED_OUT') {
         setSession(null);
-      } else if (_event === 'TOKEN_REFRESH_FAILED') {
+      } else if (_event === 'USER_SIGNED_OUT') {
         toast({
           variant: "destructive",
           title: "Authentication Error",
