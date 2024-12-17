@@ -2,28 +2,69 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
 import { ArrowRight, Printer, Palette, Package } from "lucide-react";
+import { Auth } from "@supabase/auth-ui-react";
+import { ThemeSupa } from "@supabase/auth-ui-shared";
+import { supabase } from "@/integrations/supabase/client";
+import { useEffect } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 const Index = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
+
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log("Auth state changed:", event, session);
+      
+      if (event === "SIGNED_IN") {
+        toast({
+          title: "Welcome back!",
+          description: "You have successfully signed in.",
+        });
+        navigate("/products");
+      }
+      
+      if (event === "SIGNED_OUT") {
+        toast({
+          title: "Signed out",
+          description: "You have been signed out successfully.",
+        });
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [navigate, toast]);
 
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
       <section className="relative h-[80vh] flex items-center justify-center bg-gradient-to-r from-primary-100 to-primary-200">
-        <div className="container mx-auto px-6 text-center">
-          <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-8 animate-fadeIn">
-            Your Designs, Perfectly Printed
-          </h1>
-          <p className="text-xl text-gray-700 mb-8 animate-fadeIn">
-            Custom printing solutions for your business and personal needs
-          </p>
-          <Button
-            size="lg"
-            className="bg-primary hover:bg-primary-600 text-white"
-            onClick={() => navigate("/products")}
-          >
-            Start Creating <ArrowRight className="ml-2 h-5 w-5" />
-          </Button>
+        <div className="container mx-auto px-6">
+          <div className="max-w-md mx-auto bg-white rounded-lg shadow-lg p-6">
+            <h2 className="text-2xl font-bold text-center mb-6">Welcome to GuiaPrint</h2>
+            <Auth 
+              supabaseClient={supabase}
+              appearance={{ 
+                theme: ThemeSupa,
+                style: {
+                  button: { background: 'rgb(var(--primary))', color: 'white' },
+                  anchor: { color: 'rgb(var(--primary))' },
+                }
+              }}
+              theme="light"
+              providers={[]}
+              onError={(error) => {
+                console.error("Auth error:", error);
+                toast({
+                  title: "Authentication Error",
+                  description: error.message,
+                  variant: "destructive",
+                });
+              }}
+            />
+          </div>
         </div>
       </section>
 
