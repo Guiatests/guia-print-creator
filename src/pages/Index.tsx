@@ -27,9 +27,9 @@ const Index = () => {
           description: "Welcome to Bible Quiz!",
         });
         navigate("/quiz");
-      } else if (_event === 'USER_DELETED' || _event === 'SIGNED_OUT') {
+      } else if (_event === 'SIGNED_OUT') {
         setSession(null);
-      } else if (_event === 'AUTH_ERROR') {
+      } else if (_event === 'TOKEN_REFRESH_FAILED') {
         toast({
           variant: "destructive",
           title: "Authentication Error",
