@@ -5,10 +5,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
+import { useToast } from "@/components/ui/use-toast";
 
 const Index = () => {
   const navigate = useNavigate();
   const [session, setSession] = useState(null);
+  const { toast } = useToast();
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -19,11 +21,17 @@ const Index = () => {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
-      if (session) navigate("/quiz");
+      if (session) {
+        toast({
+          title: "Successfully logged in!",
+          description: "Welcome to Bible Quiz!",
+        });
+        navigate("/quiz");
+      }
     });
 
     return () => subscription.unsubscribe();
-  }, [navigate]);
+  }, [navigate, toast]);
 
   if (!session) {
     return (
@@ -35,9 +43,26 @@ const Index = () => {
           <CardContent>
             <Auth
               supabaseClient={supabase}
-              appearance={{ theme: ThemeSupa }}
+              appearance={{ 
+                theme: ThemeSupa,
+                variables: {
+                  default: {
+                    colors: {
+                      brand: '#3b82f6',
+                      brandAccent: '#2563eb',
+                    },
+                  },
+                },
+              }}
               theme="light"
               providers={[]}
+              onError={(error) => {
+                toast({
+                  variant: "destructive",
+                  title: "Authentication Error",
+                  description: error.message,
+                });
+              }}
             />
           </CardContent>
         </Card>
