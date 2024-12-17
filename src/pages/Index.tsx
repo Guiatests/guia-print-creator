@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -20,13 +20,21 @@ const Index = () => {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
       if (session) {
+        setSession(session);
         toast({
           title: "Successfully logged in!",
           description: "Welcome to Bible Quiz!",
         });
         navigate("/quiz");
+      } else if (_event === 'USER_DELETED' || _event === 'SIGNED_OUT') {
+        setSession(null);
+      } else if (_event === 'AUTH_ERROR') {
+        toast({
+          variant: "destructive",
+          title: "Authentication Error",
+          description: "There was a problem with authentication. Please try again.",
+        });
       }
     });
 
@@ -56,13 +64,6 @@ const Index = () => {
               }}
               theme="light"
               providers={[]}
-              onError={(error) => {
-                toast({
-                  variant: "destructive",
-                  title: "Authentication Error",
-                  description: error.message,
-                });
-              }}
             />
           </CardContent>
         </Card>
