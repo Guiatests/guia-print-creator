@@ -55,13 +55,15 @@ const Index = () => {
               }}
               theme="light"
               providers={[]}
-              onError={(error) => {
-                console.error("Auth error:", error);
-                toast({
-                  title: "Authentication Error",
-                  description: error.message,
-                  variant: "destructive",
-                });
+              showLinks={true}
+              view="sign_in"
+              localization={{
+                variables: {
+                  sign_in: {
+                    email_label: 'Email',
+                    password_label: 'Password',
+                  },
+                },
               }}
             />
           </div>
