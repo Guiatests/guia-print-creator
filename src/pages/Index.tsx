@@ -1,88 +1,69 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { supabase } from "@/integrations/supabase/client";
-import { Auth } from "@supabase/auth-ui-react";
-import { ThemeSupa } from "@supabase/auth-ui-shared";
-import { useToast } from "@/hooks/use-toast";
+import { Card } from "@/components/ui/card";
+import { useNavigate } from "react-router-dom";
+import { ArrowRight, Printer, Palette, Package } from "lucide-react";
 
 const Index = () => {
   const navigate = useNavigate();
-  const [session, setSession] = useState(null);
-  const { toast } = useToast();
-
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-    });
-
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session) {
-        setSession(session);
-        toast({
-          title: "Successfully logged in!",
-          description: "Welcome to Bible Quiz!",
-        });
-        navigate("/quiz");
-      } else {
-        setSession(null);
-        if (_event === 'SIGNED_OUT') {
-          toast({
-            variant: "destructive",
-            title: "Signed Out",
-            description: "You have been signed out of your account.",
-          });
-        }
-      }
-    });
-
-    return () => subscription.unsubscribe();
-  }, [navigate, toast]);
-
-  if (!session) {
-    return (
-      <div className="container mx-auto max-w-md p-6">
-        <Card>
-          <CardHeader className="text-center">
-            <CardTitle className="text-2xl font-bold mb-4">Bible Quiz Game</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Auth
-              supabaseClient={supabase}
-              appearance={{ 
-                theme: ThemeSupa,
-                variables: {
-                  default: {
-                    colors: {
-                      brand: '#3b82f6',
-                      brandAccent: '#2563eb',
-                    },
-                  },
-                },
-              }}
-              theme="light"
-              providers={[]}
-            />
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
 
   return (
-    <div className="container mx-auto max-w-xl p-6 text-center">
-      <h1 className="text-3xl font-bold mb-6">Welcome to Bible Quiz!</h1>
-      <Card className="mb-6">
-        <CardContent className="p-6">
-          <p className="text-lg mb-4">Test your knowledge of the Bible with our interactive quiz game!</p>
-          <Button onClick={() => navigate("/quiz")} size="lg" className="w-full">
-            Start Quiz
+    <div className="min-h-screen bg-white">
+      {/* Hero Section */}
+      <section className="relative h-[80vh] flex items-center justify-center bg-gradient-to-r from-primary-100 to-primary-200">
+        <div className="container mx-auto px-6 text-center">
+          <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-8 animate-fadeIn">
+            Your Designs, Perfectly Printed
+          </h1>
+          <p className="text-xl text-gray-700 mb-8 animate-fadeIn">
+            Custom printing solutions for your business and personal needs
+          </p>
+          <Button
+            size="lg"
+            className="bg-primary hover:bg-primary-600 text-white"
+            onClick={() => navigate("/products")}
+          >
+            Start Creating <ArrowRight className="ml-2 h-5 w-5" />
           </Button>
-        </CardContent>
-      </Card>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="py-20 bg-white">
+        <div className="container mx-auto px-6">
+          <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
+            Why Choose GuiaPrint?
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <Card className="p-6 hover:shadow-lg transition-shadow">
+              <div className="text-primary mb-4">
+                <Printer className="h-12 w-12" />
+              </div>
+              <h3 className="text-xl font-semibold mb-2">Quality Printing</h3>
+              <p className="text-gray-600">
+                State-of-the-art printing technology for vibrant, long-lasting results
+              </p>
+            </Card>
+            <Card className="p-6 hover:shadow-lg transition-shadow">
+              <div className="text-primary mb-4">
+                <Palette className="h-12 w-12" />
+              </div>
+              <h3 className="text-xl font-semibold mb-2">Custom Design</h3>
+              <p className="text-gray-600">
+                Easy-to-use design tools to bring your ideas to life
+              </p>
+            </Card>
+            <Card className="p-6 hover:shadow-lg transition-shadow">
+              <div className="text-primary mb-4">
+                <Package className="h-12 w-12" />
+              </div>
+              <h3 className="text-xl font-semibold mb-2">Fast Delivery</h3>
+              <p className="text-gray-600">
+                Quick turnaround times and reliable shipping worldwide
+              </p>
+            </Card>
+          </div>
+        </div>
+      </section>
     </div>
   );
 };
