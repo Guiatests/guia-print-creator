@@ -27,14 +27,15 @@ const Index = () => {
           description: "Welcome to Bible Quiz!",
         });
         navigate("/quiz");
-      } else if (_event === 'SIGNED_OUT') {
+      } else {
         setSession(null);
-      } else if (_event === 'USER_SIGNED_OUT') {
-        toast({
-          variant: "destructive",
-          title: "Authentication Error",
-          description: "There was a problem with authentication. Please try again.",
-        });
+        if (_event === 'SIGNED_OUT') {
+          toast({
+            variant: "destructive",
+            title: "Signed Out",
+            description: "You have been signed out of your account.",
+          });
+        }
       }
     });
 
