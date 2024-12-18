@@ -17,6 +17,7 @@ const Index = () => {
       console.log("Auth state changed:", event, session);
       
       if (event === "SIGNED_IN") {
+        console.log("User signed in successfully");
         toast({
           title: "Welcome back!",
           description: "You have successfully signed in.",
@@ -25,6 +26,7 @@ const Index = () => {
       }
       
       if (event === "SIGNED_OUT") {
+        console.log("User signed out");
         toast({
           title: "Signed out",
           description: "You have been signed out successfully.",
@@ -57,13 +59,13 @@ const Index = () => {
               providers={[]}
               showLinks={true}
               view="sign_in"
-              localization={{
-                variables: {
-                  sign_in: {
-                    email_label: 'Email',
-                    password_label: 'Password',
-                  },
-                },
+              onError={(error) => {
+                console.error("Auth error:", error);
+                toast({
+                  title: "Authentication Error",
+                  description: error.message,
+                  variant: "destructive",
+                });
               }}
             />
           </div>
